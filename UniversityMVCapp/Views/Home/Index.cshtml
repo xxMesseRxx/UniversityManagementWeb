@@ -1,1 +1,8 @@
-﻿
+﻿@model List<Course>
+
+<ul class="Courses">
+	@foreach (var course in Model)
+	{
+		<li>@course.Name</li>
+	}
+</ul>
