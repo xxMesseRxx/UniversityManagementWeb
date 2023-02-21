@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace UniversityMVCapp;
+namespace UniversityMVCapp.Models;
 
 public partial class Course
 {
