@@ -1,8 +1,11 @@
 ﻿@model List<Course>
 
+<h2>Courses:</h2>
 <ul class="Courses">
 	@foreach (var course in Model)
 	{
-		<li>@course.Name</li>
+		<li id=@course.CourseId>@course.Name</li>
 	}
 </ul>
+
+<script src="~/js/ShowChildren.js"></script>
