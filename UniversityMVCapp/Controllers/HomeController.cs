@@ -17,10 +17,15 @@ namespace UniversityMVCapp.Controllers
         {
             return View(db.Courses.ToList());
         }
-        public IActionResult Course(string id)
+        public IActionResult Groups(string courseId)
         {
-            List<Group> groups = db.Groups.Where(group => group.CourseId.ToString() == id).ToList();
+            List<Group> groups = db.Groups.Where(group => group.CourseId.ToString() == courseId).ToList();
             return Json(groups);
+        }
+        public IActionResult Students(string groupId)
+        {
+            List<Student> students = db.Students.Where(student => student.GroupId.ToString() == groupId).ToList();
+            return Json(students);
         }
     }
 }
