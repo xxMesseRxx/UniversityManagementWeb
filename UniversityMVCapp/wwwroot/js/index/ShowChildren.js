@@ -37,7 +37,7 @@ async function setChildrenOfCourse(course) {
 }
 
 async function getGroupsOfCourse(courseId) {
-    const response = await fetch(`home/groups?courseId=${courseId}`, {
+    const response = await fetch(`/home/groups?courseId=${courseId}`, {
         method: "GET",
         headers: { "Accept": "application/json" }
     });
@@ -61,7 +61,7 @@ async function setChildrenOfGroup(group) {
 }
 
 async function getStudentsOfGroup(groupId) {
-    const response = await fetch(`home/students?groupId=${groupId}`, {
+    const response = await fetch(`/home/students?groupId=${groupId}`, {
         method: "GET",
         headers: { "Accept": "application/json" }
     });
