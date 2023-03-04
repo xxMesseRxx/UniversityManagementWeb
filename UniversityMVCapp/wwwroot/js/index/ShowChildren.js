@@ -25,12 +25,12 @@ async function setChildren(element) {
 async function setChildrenOfCourse(course) {
     let ul = course.appendChild(document.createElement("ul"));
 
-    let groups = await getGroupsOfCourse(course.id);
+    let groups = await getGroupsOfCourse(course.getAttribute("data-courseId"));
     groups.forEach(group => {
         let li = document.createElement("li");
         li.innerText = group.name;
         li.classList.add("group");
-        li.id = group.groupId;
+        li.setAttribute("data-groupId", group.groupId);
 
         ul.appendChild(li);
     });
@@ -51,7 +51,7 @@ async function getGroupsOfCourse(courseId) {
 async function setChildrenOfGroup(group) {
     let ul = group.appendChild(document.createElement("ul"));
 
-    let students = await getStudentsOfGroup(group.id);
+    let students = await getStudentsOfGroup(group.getAttribute("data-groupId"));
     students.forEach(student => {
         let li = document.createElement("li");
         li.innerText = student.firstName + " " + student.lastName;

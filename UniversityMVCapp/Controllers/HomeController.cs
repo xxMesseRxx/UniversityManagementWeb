@@ -59,5 +59,21 @@ namespace UniversityMVCapp.Controllers
 
 			return RedirectToAction("EditGroups");
 		}
+        [HttpDelete]
+        public async Task<JsonResult> EditGroups(string groupId)
+        {
+            try
+            {
+				Group group = await db.Groups.FirstOrDefaultAsync(g => g.GroupId.ToString() == groupId);
+				db.Groups.Remove(group);
+				await db.SaveChangesAsync();
+				return Json(group);
+			}
+            catch (DbUpdateException)
+            {
+                Response.StatusCode = 405;
+                return Json(new { message = "Группа не может быть удалена пока в ней есть студенты" });
+			}
+		}
     }
 }

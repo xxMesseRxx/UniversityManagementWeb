@@ -9,13 +9,13 @@
 		</thead>
 		<tbody>
 			@foreach(var group in Model){
-				<tr data-rowId="@group.GroupId">
+				<tr data-groupId="@group.GroupId">
 					<th>@group.GroupId</th>
 					<th>@group.Name</th>
 					<th data-courseId="@group.CourseId">@group.Course.Name</th>
 					<th>
 						<a class="editLink">Изменить</a>
-						<a class="removeLink">Удалить</a>
+						<a data-groupId="@group.GroupId" class="removeLink">Удалить</a>
 					</th>
 				</tr>
 			}
