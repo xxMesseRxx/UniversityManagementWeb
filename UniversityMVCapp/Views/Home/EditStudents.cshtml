@@ -1,0 +1,53 @@
+﻿@model List<Student>
+
+<div class="column">
+	<table id="studentsTable">
+		<thead>
+			<tr>
+				<th>Id</th><th>First name</th><th>Last name</th><th>Group name</th><th></th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach(var student in Model){
+				<tr>
+					<th>@student.StudentId</th>
+					<th>@student.FirstName</th>
+					<th>@student.LastName</th>
+					<th>@student.Group.Name</th>
+					<th>
+						<a class="editLink">Изменить</a>
+						<a class="removeLink">Удалить</a>
+					</th>
+				</tr>
+			}
+		</tbody>
+	</table>
+</div>
+
+@*<div class="column">
+	<form name="editGroup" method="post">
+		<div>
+			<label for="id">Group Id:</label><br />
+			<input type="number" name="groupId" tabindex="-1" readonly />
+		</div>
+		<div>
+			<label for="name">Group name:</label><br />
+			<input type="text" name="name" />
+		</div>
+		<div>
+			<label for="courseId">Course name:</label><br />
+			<select name="courseId">
+				@foreach(var course in ViewBag.Courses)
+				{
+					<option value="@course.CourseId">@course.Name</option>
+				}
+			</select>
+		</div>
+		<div>
+			<button type="submit" id="saveBtn">Добавить</button>
+			<button type="reset" id="resetBtn">Сбросить</button>
+		</div>
+	</form>
+</div>
+
+<script src="~/js/index/ActionsForEditingGroup.js" asp-append-version="true"></script>*@

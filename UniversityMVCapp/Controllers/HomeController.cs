@@ -75,5 +75,10 @@ namespace UniversityMVCapp.Controllers
                 return Json(new { message = "Группа не может быть удалена пока в ней есть студенты" });
 			}
 		}
-    }
+		[HttpGet]
+		public IActionResult EditStudents()
+		{
+			return View(db.Students.Include(s => s.Group).ToList());
+		}
+	}
 }
