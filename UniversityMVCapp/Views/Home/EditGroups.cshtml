@@ -1,7 +1,7 @@
 ﻿@model List<Group>
 
 <div class="column">
-	<table class="groupsTable">
+	<table id="groupsTable">
 		<thead>
 			<tr>
 				<th>Id</th><th>Name</th><th style="width:20px">Course Name</th><th></th>
@@ -9,13 +9,13 @@
 		</thead>
 		<tbody>
 			@foreach(var group in Model){
-				<tr>
+				<tr data-rowId="@group.GroupId">
 					<th>@group.GroupId</th>
 					<th>@group.Name</th>
-					<th>@group.Course.Name</th>
+					<th data-courseId="@group.CourseId">@group.Course.Name</th>
 					<th>
-						<a>Изменить</a>
-						<a>Удалить</a>
+						<a class="editLink">Изменить</a>
+						<a class="removeLink">Удалить</a>
 					</th>
 				</tr>
 			}

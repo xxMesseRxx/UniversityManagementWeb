@@ -2,7 +2,7 @@
 
 for (let i = 0; i < courses.length; i++) {
     courses[i].addEventListener("click", async e => await сhooseVisibilityAction(e));
-    };
+};
 
 async function сhooseVisibilityAction(e) {
     if (e.target.children.length === 0) {
