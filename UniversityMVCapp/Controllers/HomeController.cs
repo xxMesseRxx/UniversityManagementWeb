@@ -78,6 +78,7 @@ namespace UniversityMVCapp.Controllers
 		[HttpGet]
 		public IActionResult EditStudents()
 		{
+            ViewBag.Groups = db.Groups.ToList();
 			return View(db.Students.Include(s => s.Group).ToList());
 		}
 	}

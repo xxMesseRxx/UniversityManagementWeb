@@ -24,22 +24,26 @@
 	</table>
 </div>
 
-@*<div class="column">
-	<form name="editGroup" method="post">
+<div class="column">
+	<form name="editStudent" method="post">
 		<div>
-			<label for="id">Group Id:</label><br />
-			<input type="number" name="groupId" tabindex="-1" readonly />
+			<label for="studentId">Student Id:</label><br />
+			<input type="number" name="studentId" tabindex="-1" readonly />
 		</div>
 		<div>
-			<label for="name">Group name:</label><br />
-			<input type="text" name="name" />
+			<label for="firstName">First name:</label><br />
+			<input type="text" name="firstName" />
 		</div>
 		<div>
-			<label for="courseId">Course name:</label><br />
-			<select name="courseId">
-				@foreach(var course in ViewBag.Courses)
+			<label for="lastName">Last name:</label><br />
+			<input type="text" name="lastName" />
+		</div>
+		<div>
+			<label for="groupId">Group name:</label><br />
+			<select name="groupId">
+				@foreach(var group in ViewBag.Groups)
 				{
-					<option value="@course.CourseId">@course.Name</option>
+					<option value="@group.GroupId">@group.Name</option>
 				}
 			</select>
 		</div>
@@ -50,4 +54,4 @@
 	</form>
 </div>
 
-<script src="~/js/index/ActionsForEditingGroup.js" asp-append-version="true"></script>*@
+@*<script src="~/js/index/ActionsForEditingGroup.js" asp-append-version="true"></script>*@
