@@ -81,5 +81,26 @@ namespace UniversityMVCapp.Controllers
             ViewBag.Groups = db.Groups.ToList();
 			return View(db.Students.Include(s => s.Group).ToList());
 		}
+		[HttpPost]
+		public async Task<IActionResult> EditStudents(int? studentId, string firstName, string lastName, int groupId)
+		{
+			if (studentId is null)
+			{
+				Student newStudent = new Student() { FirstName = firstName, LastName = lastName, GroupId = groupId };
+				db.Students.Add(newStudent);
+				await db.SaveChangesAsync();
+			}
+            else
+            {
+                Student student = await db.Students.FirstOrDefaultAsync(g => g.StudentId == studentId.Value);
+                student.FirstName = firstName;
+                student.LastName = lastName;
+                student.GroupId = groupId;
+                db.Students.Update(student);
+                await db.SaveChangesAsync();
+            }
+
+            return RedirectToAction("EditStudents");
+		}
 	}
 }
