@@ -9,14 +9,14 @@
 		</thead>
 		<tbody>
 			@foreach(var student in Model){
-				<tr>
+				<tr data-studentId="@student.StudentId">
 					<th>@student.StudentId</th>
 					<th>@student.FirstName</th>
 					<th>@student.LastName</th>
-					<th>@student.Group.Name</th>
+					<th data-groupId="@student.GroupId">@student.Group.Name</th>
 					<th>
 						<a class="editLink">Изменить</a>
-						<a class="removeLink">Удалить</a>
+						<a data-studentId="@student.StudentId" class="removeLink">Удалить</a>
 					</th>
 				</tr>
 			}

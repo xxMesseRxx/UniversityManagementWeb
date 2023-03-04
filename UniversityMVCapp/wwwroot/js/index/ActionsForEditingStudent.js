@@ -1,39 +1,40 @@
-﻿//var editLinks = document.getElementsByClassName("editLink");
-//var removeLink = document.getElementsByClassName("removeLink");
+﻿var editLinks = document.getElementsByClassName("editLink");
+var removeLink = document.getElementsByClassName("removeLink");
 
-//for (let i = 0; i < editLinks.length; i++) {
-//    editLinks[i].addEventListener("click", async e => await addGroupToForm(e));
-//    removeLink[i].addEventListener("click", async e => await removeGroup(e.target.getAttribute("data-groupId")));
-//};
+for (let i = 0; i < editLinks.length; i++) {
+    editLinks[i].addEventListener("click", async e => await addStudentToForm(e));
+    removeLink[i].addEventListener("click", async e => await removeStudent(e.target.getAttribute("data-studentId")));
+};
 
-//document.getElementById("resetBtn").addEventListener("click", () => {
-//    document.getElementById("saveBtn").innerText = "Добавить";
-//});
+document.getElementById("resetBtn").addEventListener("click", () => {
+    document.getElementById("saveBtn").innerText = "Добавить";
+});
 
-//async function addGroupToForm(e) {
-//    e.preventDefault();
-//    const tableRow = e.target.parentNode.parentNode;
-//    const form = document.forms.editGroup;
+async function addStudentToForm(e) {
+    e.preventDefault();
+    const tableRow = e.target.parentNode.parentNode;
+    const form = document.forms.editStudent;
 
-//    form.groupId.value = tableRow.children[0].innerText;
-//    form.name.value = tableRow.children[1].innerText;
-//    form.courseId.value = tableRow.children[2].getAttribute("data-courseId");
+    form.studentId.value = tableRow.children[0].innerText;
+    form.firstName.value = tableRow.children[1].innerText;
+    form.lastName.value = tableRow.children[2].innerText;
+    form.groupId.value = tableRow.children[3].getAttribute("data-groupId");
 
-//    document.getElementById("saveBtn").innerText = "Сохранить";
-//}
+    document.getElementById("saveBtn").innerText = "Сохранить";
+}
 
-//async function removeGroup(groupId) {
-//    const response = await fetch(`/home/editGroups?groupId=${groupId}`, {
-//        method: "DELETE",
-//        headers: { "Accept": "application/json" }
-//    });
+async function removeStudent(studentId) {
+    const response = await fetch(`/home/editStudents?studentId=${studentId}`, {
+        method: "DELETE",
+        headers: { "Accept": "application/json" }
+    });
 
-//    if (response.ok === true) {
-//        const group = await response.json();
-//        document.querySelector(`tr[data-groupId='${group.groupId}']`).remove();
-//    }
-//    else {
-//        const error = await response.json();
-//        alert(error.message);
-//    }
-//}
+    if (response.ok === true) {
+        const student = await response.json();
+        document.querySelector(`tr[data-studentId='${student.studentId}']`).remove();
+    }
+    else {
+        const error = await response.json();
+        alert(error.message);
+    }
+}

@@ -102,5 +102,13 @@ namespace UniversityMVCapp.Controllers
 
             return RedirectToAction("EditStudents");
 		}
+		[HttpDelete]
+		public async Task<JsonResult> EditStudents(string studentId)
+		{
+			Student student = await db.Students.FirstOrDefaultAsync(s => s.StudentId.ToString() == studentId);
+			db.Students.Remove(student);
+			await db.SaveChangesAsync();
+			return Json(student);
+		}
 	}
 }
