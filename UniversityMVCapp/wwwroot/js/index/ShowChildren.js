@@ -11,6 +11,10 @@ async function сhooseVisibilityAction(e) {
     else {
         e.target.querySelector("ul").classList.toggle("hidden");
     }
+
+    if (e.target.classList.contains("group") || e.target.classList.contains("course")) {
+        e.target.classList.toggle("opened");
+    }
 }
 
 async function setChildren(element) {
