@@ -19,7 +19,7 @@ namespace UniversityMVCapp.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            return View(db.Courses.ToList());
+            return View("Index", db.Courses.ToList());
         }
         [HttpGet]
         public IActionResult Groups(string courseId)
