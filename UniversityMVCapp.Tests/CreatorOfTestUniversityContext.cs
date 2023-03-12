@@ -11,11 +11,14 @@ namespace UniversityMVCapp.Tests
 			var testDBContext = CreateEmptyContext();
 
 			var courses = CreateTestCourses();
-			var groups = CreateTestGroups(courses);
-			var students = CreateTestStudents(groups);
-
 			testDBContext.Courses.AddRange(courses);
+			testDBContext.SaveChanges();
+
+			var groups = CreateTestGroups(testDBContext.Courses.ToArray());
 			testDBContext.Groups.AddRange(groups);
+			testDBContext.SaveChanges();
+
+			var students = CreateTestStudents(testDBContext.Groups.ToArray());
 			testDBContext.Students.AddRange(students);
 			testDBContext.SaveChanges();
 

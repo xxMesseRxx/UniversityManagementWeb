@@ -37,25 +37,29 @@ namespace UniversityMVCapp.Controllers
 		public IActionResult EditGroups()
         {
             ViewBag.Courses = db.Courses.ToList();
-            return View(db.Groups.Include(g => g.Course).ToList());
+            return View("EditGroups", db.Groups.Include(g => g.Course).ToList());
         }
         [HttpPost]
         public async Task<IActionResult> EditGroups(int? groupId, string name, int courseId)
         {
-            if (groupId is null)
+            try
             {
-                Group newGroup = new Group() { Name = name, CourseId = courseId };
-                db.Groups.Add(newGroup);
-                await db.SaveChangesAsync();
+                if (groupId is null)
+                {
+                    Group newGroup = new Group() { Name = name, CourseId = courseId };
+                    db.Groups.Add(newGroup);
+                    await db.SaveChangesAsync();
+                }
+                else
+                {
+                    Group group = await db.Groups.FirstOrDefaultAsync(g => g.GroupId == groupId.Value);
+                    group.Name = name;
+                    group.CourseId = courseId;
+                    db.Groups.Update(group);
+                    await db.SaveChangesAsync();
+                }
             }
-            else
-            {
-				Group group = await db.Groups.FirstOrDefaultAsync(g => g.GroupId == groupId.Value);
-                group.Name = name;
-                group.CourseId = courseId;
-				db.Groups.Update(group);
-				await db.SaveChangesAsync();
-			}
+            catch (DbUpdateException) { }
 
 			return RedirectToAction("EditGroups");
 		}
