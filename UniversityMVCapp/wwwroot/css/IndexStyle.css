@@ -69,3 +69,34 @@ a {
     content: "⮯";
     padding-right: 5px;
 }
+
+.dataTable {
+    display: block;
+    overflow: auto;
+    max-height: 800px;
+}
+
+.dataTable  th {
+    text-align: left;
+    max-width: 160px;
+    padding-right: 15px;
+    font-style: italic;
+}
+
+.dataTable a {
+    color: #254d93;
+}
+
+.dataTable a:hover {
+    cursor: pointer;
+    border-bottom: 1px solid;
+    color: #5a99d7;
+}
+
+.dataTable a:active {
+    text-shadow: 1px 1px 0px black;
+}
+
+.editLink {
+    margin-right: 10px;
+}
