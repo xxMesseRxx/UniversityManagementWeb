@@ -53,10 +53,13 @@ namespace UniversityMVCapp.Controllers
                 else
                 {
                     Group group = await db.Groups.FirstOrDefaultAsync(g => g.GroupId == groupId.Value);
-                    group.Name = name;
-                    group.CourseId = courseId;
-                    db.Groups.Update(group);
-                    await db.SaveChangesAsync();
+                    if (group != null)
+                    {
+						group.Name = name;
+						group.CourseId = courseId;
+						db.Groups.Update(group);
+						await db.SaveChangesAsync();
+					}
                 }
             }
             catch (DbUpdateException) { }
@@ -69,9 +72,14 @@ namespace UniversityMVCapp.Controllers
             try
             {
 				Group group = await db.Groups.FirstOrDefaultAsync(g => g.GroupId.ToString() == groupId);
-				db.Groups.Remove(group);
-				await db.SaveChangesAsync();
-				return Json(group);
+                if (group != null)
+                {
+					db.Groups.Remove(group);
+					await db.SaveChangesAsync();
+					return Json(group);
+				}
+				Response.StatusCode = 405;
+				return Json(new { message = "Группа с данным Id не найдена" });
 			}
             catch (DbUpdateException)
             {
@@ -83,26 +91,33 @@ namespace UniversityMVCapp.Controllers
 		public IActionResult EditStudents()
 		{
             ViewBag.Groups = db.Groups.ToList();
-			return View(db.Students.Include(s => s.Group).ToList());
+			return View("EditStudents", db.Students.Include(s => s.Group).ToList());
 		}
 		[HttpPost]
 		public async Task<IActionResult> EditStudents(int? studentId, string firstName, string lastName, int groupId)
 		{
-			if (studentId is null)
-			{
-				Student newStudent = new Student() { FirstName = firstName, LastName = lastName, GroupId = groupId };
-				db.Students.Add(newStudent);
-				await db.SaveChangesAsync();
-			}
-            else
+            try
             {
-                Student student = await db.Students.FirstOrDefaultAsync(g => g.StudentId == studentId.Value);
-                student.FirstName = firstName;
-                student.LastName = lastName;
-                student.GroupId = groupId;
-                db.Students.Update(student);
-                await db.SaveChangesAsync();
-            }
+				if (studentId is null)
+				{
+					Student newStudent = new Student() { FirstName = firstName, LastName = lastName, GroupId = groupId };
+					db.Students.Add(newStudent);
+					await db.SaveChangesAsync();
+				}
+				else
+				{
+					Student student = await db.Students.FirstOrDefaultAsync(g => g.StudentId == studentId.Value);
+					if (student != null)
+					{
+						student.FirstName = firstName;
+						student.LastName = lastName;
+						student.GroupId = groupId;
+						db.Students.Update(student);
+						await db.SaveChangesAsync();
+					}
+				}
+			}
+			catch (DbUpdateException) { }
 
             return RedirectToAction("EditStudents");
 		}
@@ -110,9 +125,14 @@ namespace UniversityMVCapp.Controllers
 		public async Task<JsonResult> EditStudents(string studentId)
 		{
 			Student student = await db.Students.FirstOrDefaultAsync(s => s.StudentId.ToString() == studentId);
-			db.Students.Remove(student);
-			await db.SaveChangesAsync();
-			return Json(student);
+            if (student != null)
+            {
+				db.Students.Remove(student);
+				await db.SaveChangesAsync();
+				return Json(student);
+			}
+			Response.StatusCode = 405;
+			return Json(new { message = "Студент с данным Id не найден" });
 		}
 	}
 }
