@@ -21,7 +21,7 @@ public class UniversityContext : DbContext
 		modelBuilder.Entity<Course>(entity =>
 		{
 			entity.HasKey(c => c.CourseId).HasName("PK_Courses_CourseId");
-			entity.HasIndex(c => c.Name).HasName("UQ_Courses_Name").IsUnique();
+			entity.HasIndex(c => c.Name).IsUnique();
 			entity.Property(c => c.Name).HasMaxLength(50);
 		});
 
