@@ -3,15 +3,11 @@ using System.Collections.Generic;
 
 namespace UniversityMVCapp.Models;
 
-public partial class Group
+public class Group
 {
     public int GroupId { get; set; }
-
     public int CourseId { get; set; }
-
     public string Name { get; set; } = null!;
-
-    public virtual Course Course { get; set; } = null!;
-
-    public virtual ICollection<Student> Students { get; } = new List<Student>();
+    public Course Course { get; set; } = null!;
+    public List<Student> Students { get; set; } = new List<Student>();
 }

@@ -5,70 +5,46 @@ using UniversityMVCapp.Models;
 
 namespace UniversityMVCapp.ViewModels;
 
-public partial class UniversityContext : DbContext
+public class UniversityContext : DbContext
 {
-    public UniversityContext()
-    {
-    }
+	public DbSet<Course> Courses { get; set; } = null!;
+	public DbSet<Group> Groups { get; set; } = null!;
+	public DbSet<Student> Students { get; set; } = null!;
 
-    public UniversityContext(DbContextOptions<UniversityContext> options)
-        : base(options)
-    {
-    }
+	public UniversityContext(DbContextOptions<UniversityContext> options)
+		: base(options)
+	{
+	}
 
-    public virtual DbSet<Course> Courses { get; set; }
+	protected override void OnModelCreating(ModelBuilder modelBuilder)
+	{
+		modelBuilder.Entity<Course>(entity =>
+		{
+			entity.HasKey(c => c.CourseId).HasName("PK_Courses_CourseId");
+			entity.HasIndex(c => c.Name).HasName("UQ_Courses_Name").IsUnique();
+			entity.Property(c => c.Name).HasMaxLength(50);
+		});
 
-    public virtual DbSet<Group> Groups { get; set; }
+		modelBuilder.Entity<Group>(entity =>
+		{
+			entity.HasKey(g => g.GroupId).HasName("PK_Groups_GroupId");
+			entity.HasAlternateKey(g => g.Name).HasName("UQ_Groups_Name");
+			entity.Property(g => g.Name).HasMaxLength(50);
+			entity.HasOne(g => g.Course).WithMany(c => c.Groups)
+				.HasForeignKey(g => g.CourseId)
+				.OnDelete(DeleteBehavior.Restrict)
+				.HasConstraintName("FK_Groups_Courses");
+		});
 
-    public virtual DbSet<Student> Students { get; set; }
-
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
-    {
-        modelBuilder.Entity<Course>(entity =>
-        {
-            entity.HasKey(e => e.CourseId).HasName("PK_Courses_CourseID");
-
-            entity.HasIndex(e => e.Name, "UQ_Courses_Name").IsUnique();
-
-            entity.HasIndex(e => e.Name, "UQ__Courses__737584F6F75C9CC5").IsUnique();
-
-            entity.Property(e => e.CourseId).HasColumnName("CourseID");
-            entity.Property(e => e.Name).HasMaxLength(50);
-        });
-
-        modelBuilder.Entity<Group>(entity =>
-        {
-            entity.HasKey(e => e.GroupId).HasName("PK_Groups_GroupID");
-
-            entity.HasIndex(e => e.Name, "UQ_Groups_Name").IsUnique();
-
-            entity.Property(e => e.GroupId).HasColumnName("GroupID");
-            entity.Property(e => e.CourseId).HasColumnName("CourseID");
-            entity.Property(e => e.Name).HasMaxLength(50);
-
-            entity.HasOne(d => d.Course).WithMany(p => p.Groups)
-                .HasForeignKey(d => d.CourseId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Group_Course");
-        });
-
-        modelBuilder.Entity<Student>(entity =>
-        {
-            entity.HasKey(e => e.StudentId).HasName("PK_Students_StudentID");
-
-            entity.Property(e => e.StudentId).HasColumnName("StudentID");
-            entity.Property(e => e.FirstName).HasMaxLength(50);
-            entity.Property(e => e.GroupId).HasColumnName("GroupID");
-            entity.Property(e => e.LastName).HasMaxLength(50);
-
-            entity.HasOne(d => d.Group).WithMany(p => p.Students)
-                .HasForeignKey(d => d.GroupId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Student_Group");
-        });
-
-        OnModelCreatingPartial(modelBuilder);
-    }
-
-    partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+		modelBuilder.Entity<Student>(entity =>
+		{
+			entity.HasKey(s => s.StudentId).HasName("PK_Students_StudentId");
+			entity.Property(s => s.FirstName).HasMaxLength(50);
+			entity.Property(s => s.LastName).HasMaxLength(50);
+			entity.HasOne(s => s.Group).WithMany(g => g.Students)
+				.HasForeignKey(s => s.GroupId)
+				.OnDelete(DeleteBehavior.Restrict)
+				.HasConstraintName("FK_Students_Groups");
+		});
+	}
 }
