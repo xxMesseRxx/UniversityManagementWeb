@@ -8,7 +8,8 @@ var builder = WebApplication.CreateBuilder(args);
 string DBconnection = builder.Configuration.GetConnectionString("DefaultConnection");
 
 builder.Services.AddDbContext<UniversityContext>(options => options.UseSqlServer(DBconnection));
-builder.Services.AddSingleton<ICourseService, CourseService>();
+builder.Services.AddTransient<ICourseService, CourseService>();
+builder.Services.AddTransient<IGroupService, GroupService>();
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();

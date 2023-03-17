@@ -4,135 +4,136 @@ using UniversityMVCapp.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using UniversityMVCapp.Library.Interfaces;
 
 namespace UniversityMVCapp.Controllers
 {
     public class HomeController : Controller
     {
-        UniversityContext db;
+        private ICourseService _courseService;
+		private IGroupService _groupService;
 
-        public HomeController(UniversityContext context)
+		public HomeController(ICourseService courseService, IGroupService groupService)
         {
-            db = context;
+			_courseService = courseService;
+			_groupService = groupService;
         }
 
         [HttpGet]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View("Index", db.Courses.ToList());
-        }
-        [HttpGet]
-        public IActionResult Groups(string courseId)
-        {
-            List<Group> groups = db.Groups.Where(group => group.CourseId.ToString() == courseId).ToList();
-            return Json(groups);
-        }
-        [HttpGet]
-        public IActionResult Students(string groupId)
-        {
-            List<Student> students = db.Students.Where(student => student.GroupId.ToString() == groupId).ToList();
-            return Json(students);
+            return View("Index", await _courseService.GetAllAsync());
+
         }
 		[HttpGet]
-		public IActionResult EditGroups()
-        {
-            ViewBag.Courses = db.Courses.ToList();
-            return View("EditGroups", db.Groups.Include(g => g.Course).ToList());
-        }
-        [HttpPost]
-        public async Task<IActionResult> EditGroups(int? groupId, string name, int courseId)
-        {
-            try
-            {
-                if (groupId is null)
-                {
-                    Group newGroup = new Group() { Name = name, CourseId = courseId };
-                    db.Groups.Add(newGroup);
-                    await db.SaveChangesAsync();
-                }
-                else
-                {
-                    Group group = await db.Groups.FirstOrDefaultAsync(g => g.GroupId == groupId.Value);
-                    if (group != null)
-                    {
-						group.Name = name;
-						group.CourseId = courseId;
-						db.Groups.Update(group);
-						await db.SaveChangesAsync();
-					}
-                }
-            }
-            catch (DbUpdateException) { }
-
-			return RedirectToAction("EditGroups");
-		}
-        [HttpDelete]
-        public async Task<JsonResult> EditGroups(string groupId)
-        {
-            try
-            {
-				Group group = await db.Groups.FirstOrDefaultAsync(g => g.GroupId.ToString() == groupId);
-                if (group != null)
-                {
-					db.Groups.Remove(group);
-					await db.SaveChangesAsync();
-					return Json(group);
-				}
-				Response.StatusCode = 405;
-				return Json(new { message = "Группа с данным Id не найдена" });
-			}
-            catch (DbUpdateException)
-            {
-                Response.StatusCode = 405;
-                return Json(new { message = "Группа не может быть удалена пока в ней есть студенты" });
-			}
-		}
-		[HttpGet]
-		public IActionResult EditStudents()
+		public async Task<IActionResult> Groups(string courseId)
 		{
-            ViewBag.Groups = db.Groups.ToList();
-			return View("EditStudents", db.Students.Include(s => s.Group).ToList());
+			if (int.TryParse(courseId, out int id))
+			{
+				try
+				{
+					return Json(await _groupService.GetGroupsWithCourseIdAsync(id));
+				}
+				catch (ArgumentException) { }
+			}
+
+			return RedirectToAction("Index");
+		}
+		//      [HttpGet]
+		//      public IActionResult Students(string groupId)
+		//      {
+		//          List<Student> students = db.Students.Where(student => student.GroupId.ToString() == groupId).ToList();
+		//          return Json(students);
+		//      }
+		[HttpGet]
+		public async Task<IActionResult> EditGroups()
+		{
+			ViewBag.Courses = await _courseService.GetAllAsync();
+			return View("EditGroups", await _groupService.GetAllAsync());
 		}
 		[HttpPost]
-		public async Task<IActionResult> EditStudents(int? studentId, string firstName, string lastName, int groupId)
+		public async Task<IActionResult> EditGroups(int? groupId, string name, int courseId)
 		{
-            try
-            {
-				if (studentId is null)
+			try
+			{
+				if (groupId is null)
 				{
-					Student newStudent = new Student() { FirstName = firstName, LastName = lastName, GroupId = groupId };
-					db.Students.Add(newStudent);
-					await db.SaveChangesAsync();
+					await _groupService.AddAsync(courseId, name);
 				}
 				else
 				{
-					Student student = await db.Students.FirstOrDefaultAsync(g => g.StudentId == studentId.Value);
-					if (student != null)
-					{
-						student.FirstName = firstName;
-						student.LastName = lastName;
-						student.GroupId = groupId;
-						db.Students.Update(student);
-						await db.SaveChangesAsync();
-					}
+					await _groupService.EditAsync((int)groupId, courseId, name);
 				}
 			}
-			catch (DbUpdateException) { }
+			catch (ArgumentException) { }
 
-            return RedirectToAction("EditStudents");
+			return RedirectToAction("EditGroups");
 		}
 		[HttpDelete]
-		public async Task<JsonResult> EditStudents(string studentId)
+		public async Task<JsonResult> EditGroups(int groupId)
 		{
-			Student student = await db.Students.FirstOrDefaultAsync(s => s.StudentId.ToString() == studentId);
-            if (student != null)
-            {
-				db.Students.Remove(student);
-				await db.SaveChangesAsync();
-				return Json(student);
+			try
+			{
+				await _groupService.DelGroupAsync(groupId);
+				return Json(new { groupId });
 			}
-			Response.StatusCode = 405;
-			return Json(new { message = "Студент с данным Id не найден" });
+			catch (InvalidOperationException)
+			{
+				Response.StatusCode = 405;
+				return Json(new { message = "Группа не может быть удалена пока в ней есть студенты" });
+			}
+			catch (ArgumentException)
+			{
+				Response.StatusCode = 405;
+				return Json(new { message = "Группа с данным Id не найдена" });
+			}
 		}
+		//[HttpGet]
+		//public IActionResult EditStudents()
+		//{
+		//          ViewBag.Groups = db.Groups.ToList();
+		//	return View("EditStudents", db.Students.Include(s => s.Group).ToList());
+		//}
+		//[HttpPost]
+		//public async Task<IActionResult> EditStudents(int? studentId, string firstName, string lastName, int groupId)
+		//{
+		//          try
+		//          {
+		//		if (studentId is null)
+		//		{
+		//			Student newStudent = new Student() { FirstName = firstName, LastName = lastName, GroupId = groupId };
+		//			db.Students.Add(newStudent);
+		//			await db.SaveChangesAsync();
+		//		}
+		//		else
+		//		{
+		//			Student student = await db.Students.FirstOrDefaultAsync(g => g.StudentId == studentId.Value);
+		//			if (student != null)
+		//			{
+		//				student.FirstName = firstName;
+		//				student.LastName = lastName;
+		//				student.GroupId = groupId;
+		//				db.Students.Update(student);
+		//				await db.SaveChangesAsync();
+		//			}
+		//		}
+		//	}
+		//	catch (DbUpdateException) { }
+
+		//          return RedirectToAction("EditStudents");
+		//}
+		//[HttpDelete]
+		//public async Task<JsonResult> EditStudents(string studentId)
+		//{
+		//	Student student = await db.Students.FirstOrDefaultAsync(s => s.StudentId.ToString() == studentId);
+		//          if (student != null)
+		//          {
+		//		db.Students.Remove(student);
+		//		await db.SaveChangesAsync();
+		//		return Json(student);
+		//	}
+		//	Response.StatusCode = 405;
+		//	return Json(new { message = "Студент с данным Id не найден" });
+		//}
 	}
 }

@@ -7,21 +7,20 @@ namespace UniversityMVCapp.Services
 {
 	public class CourseService : ICourseService
 	{
-		private UniversityContext db;
+		private UniversityContext _db;
 
 		public CourseService(UniversityContext context)
 		{
-			db = context;
+			_db = context;
 		}
 
-		public async Task<List<Course>> GetAll()
+		public async Task<List<Course>> GetAllAsync()
 		{
-			return await db.Courses.ToListAsync();
+			return await _db.Courses.ToListAsync();
 		}
-
-		public async Task<Course?> GetCourse(int id)
+		public async Task<Course?> GetCourseAsync(int id)
 		{
-			return await db.Courses.FindAsync(id);
+			return await _db.Courses.FindAsync(id);
 		}
 	}
 }
