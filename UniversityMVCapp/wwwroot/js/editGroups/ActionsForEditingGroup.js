@@ -23,7 +23,7 @@ async function addGroupToForm(e) {
 }
 
 async function removeGroup(groupId) {
-    const response = await fetch(`/home/editGroups?groupId=${groupId}`, {
+    const response = await fetch(`/groups/editGroups?groupId=${groupId}`, {
         method: "DELETE",
         headers: { "Accept": "application/json" }
     });

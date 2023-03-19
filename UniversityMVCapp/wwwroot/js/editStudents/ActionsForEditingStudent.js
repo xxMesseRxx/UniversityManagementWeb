@@ -24,7 +24,7 @@ async function addStudentToForm(e) {
 }
 
 async function removeStudent(studentId) {
-    const response = await fetch(`/home/editStudents?studentId=${studentId}`, {
+    const response = await fetch(`/students/editStudents?studentId=${studentId}`, {
         method: "DELETE",
         headers: { "Accept": "application/json" }
     });
