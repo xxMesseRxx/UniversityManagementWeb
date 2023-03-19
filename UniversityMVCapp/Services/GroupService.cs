@@ -97,5 +97,5 @@ namespace UniversityMVCapp.Services
 				throw new ArgumentException("CourseId isn't exist");
 			}
 		}
-}
+	}
 }

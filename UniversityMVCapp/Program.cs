@@ -10,6 +10,7 @@ string DBconnection = builder.Configuration.GetConnectionString("DefaultConnecti
 builder.Services.AddDbContext<UniversityContext>(options => options.UseSqlServer(DBconnection));
 builder.Services.AddTransient<ICourseService, CourseService>();
 builder.Services.AddTransient<IGroupService, GroupService>();
+builder.Services.AddTransient<IStudentService, StudentService>();
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();

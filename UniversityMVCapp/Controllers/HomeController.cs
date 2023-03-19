@@ -12,11 +12,13 @@ namespace UniversityMVCapp.Controllers
     {
         private ICourseService _courseService;
 		private IGroupService _groupService;
+		private IStudentService _studentService;
 
-		public HomeController(ICourseService courseService, IGroupService groupService)
+		public HomeController(ICourseService courseService, IGroupService groupService, IStudentService studentService)
         {
 			_courseService = courseService;
 			_groupService = groupService;
+			_studentService = studentService;
         }
 
         [HttpGet]
@@ -26,25 +28,27 @@ namespace UniversityMVCapp.Controllers
 
         }
 		[HttpGet]
-		public async Task<IActionResult> Groups(string courseId)
+		public async Task<IActionResult> Groups(int courseId)
 		{
-			if (int.TryParse(courseId, out int id))
+			try
 			{
-				try
-				{
-					return Json(await _groupService.GetGroupsWithCourseIdAsync(id));
-				}
-				catch (ArgumentException) { }
+				return Json(await _groupService.GetGroupsWithCourseIdAsync(courseId));
 			}
+			catch (ArgumentException) { }
 
 			return RedirectToAction("Index");
 		}
-		//      [HttpGet]
-		//      public IActionResult Students(string groupId)
-		//      {
-		//          List<Student> students = db.Students.Where(student => student.GroupId.ToString() == groupId).ToList();
-		//          return Json(students);
-		//      }
+		[HttpGet]
+		public async Task<IActionResult> Students(int groupId)
+		{
+			try
+			{
+				return Json(await _studentService.GetStudentsWithGroupIdAsync(groupId));
+			}
+			catch (ArgumentException) { }
+
+			return RedirectToAction("Index");
+		}
 		[HttpGet]
 		public async Task<IActionResult> EditGroups()
 		{
@@ -88,52 +92,42 @@ namespace UniversityMVCapp.Controllers
 				return Json(new { message = "Группа с данным Id не найдена" });
 			}
 		}
-		//[HttpGet]
-		//public IActionResult EditStudents()
-		//{
-		//          ViewBag.Groups = db.Groups.ToList();
-		//	return View("EditStudents", db.Students.Include(s => s.Group).ToList());
-		//}
-		//[HttpPost]
-		//public async Task<IActionResult> EditStudents(int? studentId, string firstName, string lastName, int groupId)
-		//{
-		//          try
-		//          {
-		//		if (studentId is null)
-		//		{
-		//			Student newStudent = new Student() { FirstName = firstName, LastName = lastName, GroupId = groupId };
-		//			db.Students.Add(newStudent);
-		//			await db.SaveChangesAsync();
-		//		}
-		//		else
-		//		{
-		//			Student student = await db.Students.FirstOrDefaultAsync(g => g.StudentId == studentId.Value);
-		//			if (student != null)
-		//			{
-		//				student.FirstName = firstName;
-		//				student.LastName = lastName;
-		//				student.GroupId = groupId;
-		//				db.Students.Update(student);
-		//				await db.SaveChangesAsync();
-		//			}
-		//		}
-		//	}
-		//	catch (DbUpdateException) { }
+		[HttpGet]
+		public async Task<IActionResult> EditStudents()
+		{
+			ViewBag.Groups = await _groupService.GetAllAsync();
+			return View("EditStudents", await _studentService.GetAllAsync());
+		}
+		[HttpPost]
+		public async Task<IActionResult> EditStudents(int? studentId, string firstName, string lastName, int groupId)
+		{
+			try
+			{
+				if (studentId is null)
+				{
+					await _studentService.AddAsync(groupId, firstName, lastName);
+				}
+				else
+				{
+					await _studentService.EditAsync((int)studentId, groupId, firstName, lastName);
+				}
+			}
+			catch (ArgumentException) { }
 
-		//          return RedirectToAction("EditStudents");
-		//}
-		//[HttpDelete]
-		//public async Task<JsonResult> EditStudents(string studentId)
-		//{
-		//	Student student = await db.Students.FirstOrDefaultAsync(s => s.StudentId.ToString() == studentId);
-		//          if (student != null)
-		//          {
-		//		db.Students.Remove(student);
-		//		await db.SaveChangesAsync();
-		//		return Json(student);
-		//	}
-		//	Response.StatusCode = 405;
-		//	return Json(new { message = "Студент с данным Id не найден" });
-		//}
+			return RedirectToAction("EditStudents");
+		}
+		[HttpDelete]
+		public async Task<JsonResult> EditStudents(int studentId)
+		{
+			try
+			{
+				await _studentService.DelStudentAsync(studentId);
+				return Json(new { studentId });
+			}
+			catch (ArgumentException) { }
+
+			Response.StatusCode = 405;
+			return Json(new { message = "Студент с данным Id не найден" });
+		}
 	}
 }
