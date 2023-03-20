@@ -29,24 +29,12 @@ namespace UniversityMVCapp.Controllers
 		[HttpGet]
 		public async Task<IActionResult> Groups(int courseId)
 		{
-			try
-			{
-				return Json(await _groupService.GetGroupsWithCourseIdAsync(courseId));
-			}
-			catch (ArgumentException) { }
-
-			return RedirectToAction("Index");
+			return Json(await _groupService.GetGroupsWithCourseIdAsync(courseId));
 		}
 		[HttpGet]
 		public async Task<IActionResult> Students(int groupId)
 		{
-			try
-			{
-				return Json(await _studentService.GetStudentsWithGroupIdAsync(groupId));
-			}
-			catch (ArgumentException) { }
-
-			return RedirectToAction("Index");
+			return Json(await _studentService.GetStudentsWithGroupIdAsync(groupId));
 		}
 	}
 }

@@ -82,14 +82,8 @@ namespace UniversityMVCapp.Services
 		public async Task<List<Student>> GetStudentsWithGroupIdAsync(int groupId)
 		{
 			List<Student>? student = await _db.Students.Where(s => s.GroupId == groupId).ToListAsync();
-			if (student != null)
-			{
-				return student;
-			}
-			else
-			{
-				throw new ArgumentException("GroupId isn't exist");
-			}
+
+			return student;
 		}
 	}
 }

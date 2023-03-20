@@ -24,7 +24,7 @@ namespace UniversityMVCapp.Services
 			}
 			catch (DbUpdateException)
 			{
-				throw new ArgumentException("Name isn't unique or courseId isn't exist");
+				throw new ArgumentException("Name is null/isn't unique or courseId isn't exist");
 			}
 		}
 		public async Task DelGroupAsync(int groupId)
@@ -88,14 +88,8 @@ namespace UniversityMVCapp.Services
 		public async Task<List<Group>> GetGroupsWithCourseIdAsync(int courseId)
 		{
 			List<Group>? groups = await _db.Groups.Where(g => g.CourseId == courseId).ToListAsync();
-			if (groups != null)
-			{
-				return groups;
-			}
-			else
-			{
-				throw new ArgumentException("CourseId isn't exist");
-			}
+
+			return groups;
 		}
 	}
 }
