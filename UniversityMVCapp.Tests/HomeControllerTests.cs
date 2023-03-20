@@ -45,7 +45,7 @@ namespace UniversityMVCapp.Tests
 			Assert.NotNull(result);
 		}
 		[Fact]
-		public void Index_DBContextWith3Courses_InModel3CoursesExpected()
+		public void Index_DBContextWith4Courses_InModel4CoursesExpected()
 		{
 			//Arrange
 			var serviceCreator = new CreatorOfTestDataServices(true);
@@ -58,7 +58,7 @@ namespace UniversityMVCapp.Tests
 
 			//Assert
 			var model = Assert.IsAssignableFrom<List<Course>>(result?.Model);
-			Assert.Equal(3, model.Count());
+			Assert.Equal(4, model.Count());
 		}
 
 		[Fact]

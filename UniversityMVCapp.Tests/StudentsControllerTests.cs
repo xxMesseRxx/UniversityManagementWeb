@@ -160,7 +160,7 @@ namespace UniversityMVCapp.Tests
 			Assert.Equal(10, result);
 		}
 		[Fact]
-		public void EditStudentsDel_DelStudentIncorId_ExceptionExpected()
+		public async void EditStudentsDel_DelStudentIncorId_ExceptionExpected()
 		{
 			//Arrange
 			var serviceCreator = new CreatorOfTestDataServices(true);
@@ -168,7 +168,7 @@ namespace UniversityMVCapp.Tests
 													serviceCreator.GetStudentService());
 
 			//Act
-			Assert.ThrowsAsync<Exception>(() => controller.EditStudents(-55));
+			await Assert.ThrowsAsync<NullReferenceException>(() => controller.EditStudents(-55));
 		}
 	}
 }

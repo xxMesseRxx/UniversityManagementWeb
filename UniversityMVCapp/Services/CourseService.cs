@@ -14,7 +14,7 @@ namespace UniversityMVCapp.Services
 			_db = context;
 		}
 
-		public async Task AddAsync(string name, string? description)
+		public async Task AddAsync(string name, string description = "")
 		{
 			try
 			{
@@ -49,7 +49,7 @@ namespace UniversityMVCapp.Services
 			}
 		}
 
-		public async Task EditAsync(int courseId, string name, string? description)
+		public async Task EditAsync(int courseId, string name, string description = "")
 		{
 			Course? course = await _db.Courses.FindAsync(courseId);
 			if (course != null)

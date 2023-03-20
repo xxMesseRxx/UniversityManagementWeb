@@ -38,7 +38,8 @@ namespace UniversityMVCapp.Tests
 			{
 				new Course {Name = "Test course 1", Description = "Some description 1"},
 				new Course {Name = "Test course 2", Description = "Some description 2"},
-				new Course {Name = "Test course 3", Description = "Some description 3"}
+				new Course {Name = "Test course 3", Description = "Some description 3"},
+				new Course {Name = "Test course 4", Description = "Some description 4"}
 			};
 
 			return courses;

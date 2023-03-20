@@ -57,7 +57,7 @@ namespace UniversityMVCapp.Tests
 			Assert.Equal(6, model.Count());
 		}
 		[Fact]
-		public void EditGroupsGet_DBContextWith3Courses_InViewBag3CoursesExpected()
+		public void EditGroupsGet_DBContextWith4Courses_InViewBag4CoursesExpected()
 		{
 			//Arrange
 			var serviceCreator = new CreatorOfTestDataServices(true);
@@ -69,7 +69,7 @@ namespace UniversityMVCapp.Tests
 
 			//Assert
 			var model = Assert.IsAssignableFrom<List<Course>>(result?.ViewData["Courses"]);
-			Assert.Equal(3, model.Count());
+			Assert.Equal(4, model.Count());
 		}
 
 		[Fact]
@@ -160,7 +160,7 @@ namespace UniversityMVCapp.Tests
 			Assert.Equal(5, result);
 		}
 		[Fact]
-		public void EditGroupsDel_DelGroupWithStudents_ExceptionExpected()
+		public async void EditGroupsDel_DelGroupWithStudents_ExceptionExpected()
 		{
 			//Arrange
 			var serviceCreator = new CreatorOfTestDataServices(true);
@@ -170,10 +170,10 @@ namespace UniversityMVCapp.Tests
 			Group someGroup = groupService.GetAllAsync().Result[2];
 
 			//Act
-			Assert.ThrowsAsync<Exception>(async () => controller.EditGroups(someGroup.GroupId));
+			await Assert.ThrowsAsync<NullReferenceException>(() => controller.EditGroups(someGroup.GroupId));
 		}
 		[Fact]
-		public void EditGroupsDel_DelGroupIncorId_ExceptionExpected()
+		public async void EditGroupsDel_DelGroupIncorId_ExceptionExpected()
 		{
 			//Arrange
 			var serviceCreator = new CreatorOfTestDataServices(true);
@@ -182,7 +182,7 @@ namespace UniversityMVCapp.Tests
 			var controller = new GroupsController(courseService, groupService);
 
 			//Act
-			Assert.ThrowsAsync<Exception>(() => controller.EditGroups(-55));
+			await Assert.ThrowsAsync<NullReferenceException>(() => controller.EditGroups(-55));
 		}
 	}
 }
