@@ -1,0 +1,57 @@
+﻿@model List<Student>
+
+<div class="column">
+	<table id="studentsTable" class="dataTable">
+		<thead>
+			<tr>
+				<th>Id</th><th>First name</th><th>Last name</th><th>Group name</th><th></th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach(var student in Model){
+				<tr data-studentId="@student.StudentId">
+					<th>@student.StudentId</th>
+					<th>@student.FirstName</th>
+					<th>@student.LastName</th>
+					<th data-groupId="@student.GroupId">@student.Group.Name</th>
+					<th>
+						<a class="editLink">Изменить</a>
+						<a data-studentId="@student.StudentId" class="removeLink">Удалить</a>
+					</th>
+				</tr>
+			}
+		</tbody>
+	</table>
+</div>
+
+<div class="column">
+	<form name="editStudent" method="post">
+		<div>
+			<label for="studentId">Student Id:</label><br />
+			<input type="number" name="studentId" tabindex="-1" readonly />
+		</div>
+		<div>
+			<label for="firstName">First name:</label><br />
+			<input type="text" name="firstName" />
+		</div>
+		<div>
+			<label for="lastName">Last name:</label><br />
+			<input type="text" name="lastName" />
+		</div>
+		<div>
+			<label for="groupId">Group name:</label><br />
+			<select name="groupId">
+				@foreach(var group in ViewBag.Groups)
+				{
+					<option value="@group.GroupId">@group.Name</option>
+				}
+			</select>
+		</div>
+		<div>
+			<button type="submit" id="saveBtn">Добавить</button>
+			<button type="reset" id="resetBtn">Сбросить</button>
+		</div>
+	</form>
+</div>
+
+<script src="~/js/editStudents/ActionsForEditingStudent.js" asp-append-version="true"></script>

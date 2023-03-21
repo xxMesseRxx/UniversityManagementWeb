@@ -1,0 +1,52 @@
+﻿@model List<Group>
+
+<div class="column">
+	<table id="groupsTable" class="dataTable">
+		<thead>
+			<tr>
+				<th>Id</th><th>Name</th><th>Course Name</th><th></th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach(var group in Model){
+				<tr data-groupId="@group.GroupId">
+					<th>@group.GroupId</th>
+					<th>@group.Name</th>
+					<th data-courseId="@group.CourseId">@group.Course.Name</th>
+					<th>
+						<a class="editLink">Изменить</a>
+						<a data-groupId="@group.GroupId" class="removeLink">Удалить</a>
+					</th>
+				</tr>
+			}
+		</tbody>
+	</table>
+</div>
+
+<div class="column">
+	<form name="editGroup" method="post">
+		<div>
+			<label for="groupId">Group Id:</label><br />
+			<input type="number" name="groupId" tabindex="-1" readonly />
+		</div>
+		<div>
+			<label for="name">Group name:</label><br />
+			<input type="text" name="name" />
+		</div>
+		<div>
+			<label for="courseId">Course name:</label><br />
+			<select name="courseId">
+				@foreach(var course in ViewBag.Courses)
+				{
+					<option value="@course.CourseId">@course.Name</option>
+				}
+			</select>
+		</div>
+		<div>
+			<button type="submit" id="saveBtn">Добавить</button>
+			<button type="reset" id="resetBtn">Сбросить</button>
+		</div>
+	</form>
+</div>
+
+<script src="~/js/editGroups/ActionsForEditingGroup.js" asp-append-version="true"></script>

@@ -1,0 +1,27 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    <link rel="stylesheet", href="~/css/IndexStyle.css" asp-append-version="true"/>
+</head>
+<body>
+    <nav>
+        <ul class="navbar">
+            <li>
+                <a asp-controller="home" asp-action="index">Структура</a>
+            </li>
+            <li>
+                <a asp-controller="groups" asp-action="editGroups">Группы</a>
+            </li>
+            <li>
+                <a asp-controller="students" asp-action="editStudents">Студенты</a>
+            </li>
+        </ul>
+    </nav>
+    <div>
+        @RenderBody()
+    </div>
+</body>
+</html>
